@@ -61,7 +61,7 @@ def send_email(data):
     mail_sender = current_app.config.get('DEFAULT_MAIL_SENDER')
     contat_sender = current_app.config.get('MAIL_CONTACT')
     from_addr = os.environ.get('TRYTOND_EMAIL__FROM', mail_sender)
-    to_addr = ', '.join([contat_sender, data.get('email')])
+    to_addr = [contat_sender, data.get('email')]
     subject =  '%s - %s' % (current_app.config.get('TITLE'), _('New request'))
     plain = render_template('emails/contact-text.jinja', data=data)
     html = render_template('emails/contact-html.jinja', data=data)
@@ -69,7 +69,7 @@ def send_email(data):
     msg = MIMEMultipart()
     charset.add_charset('utf-8', charset.QP, charset.QP)
     msg['From'] = from_addr
-    msg['To'] = to_addr
+    msg['To'] = ', '.join(to_addr)
     msg['Subject'] = Header(subject, 'utf-8')
 
     body = MIMEMultipart('alternative')
@@ -80,7 +80,7 @@ def send_email(data):
     try:
         datamanager = SMTPDataManager()
         datamanager._server = get_smtp_server()
-        sendmail_transactional(from_addr, [to_addr], msg, datamanager=datamanager)
+        sendmail_transactional(from_addr, to_addr, msg, datamanager=datamanager)
     except SMTPAuthenticationError as e:
         current_app.logger.error('Error send email!')
         current_app.logger.error(str(e))
