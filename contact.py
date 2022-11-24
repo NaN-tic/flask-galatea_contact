@@ -61,7 +61,7 @@ def send_email(data):
     mail_sender = current_app.config.get('DEFAULT_MAIL_SENDER')
     contat_sender = current_app.config.get('MAIL_CONTACT')
     from_addr = os.environ.get('TRYTOND_EMAIL__FROM', mail_sender)
-    to_addr = [contat_sender, data.get('email')]
+    to_addr = ', '.join([contat_sender, data.get('email')])
     subject =  '%s - %s' % (current_app.config.get('TITLE'), _('New request'))
     plain = render_template('emails/contact-text.jinja', data=data)
     html = render_template('emails/contact-html.jinja', data=data)
