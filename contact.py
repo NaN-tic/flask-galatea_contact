@@ -2,7 +2,7 @@
 #The COPYRIGHT file at the top level of this repository contains
 #the full copyright notices and license terms.
 import os
-from flask import Blueprint, request, render_template, flash, current_app, abort
+from flask import Blueprint, request, render_template, flash, current_app
 from flask_babel import gettext as _, lazy_gettext
 from flask_wtf import FlaskForm as Form
 from wtforms import StringField, TextAreaField, validators
