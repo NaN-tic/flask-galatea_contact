@@ -7,8 +7,7 @@ from flask_babel import gettext as _, lazy_gettext
 from flask_wtf import FlaskForm as Form
 from wtforms import StringField, TextAreaField, validators
 from galatea.tryton import tryton
-from trytond.sendmail import sendmail_transactional, get_smtp_server, SMTPDataManager
-from smtplib import SMTPAuthenticationError
+from trytond.sendmail import sendmail_transactional
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -77,14 +76,7 @@ def send_email(data):
     body.attach(MIMEText(html, 'html', _charset='utf-8'))
     msg.attach(body)
 
-    try:
-        datamanager = SMTPDataManager()
-        datamanager._server = get_smtp_server()
-        sendmail_transactional(from_addr, to_addr, msg, datamanager=datamanager)
-    except SMTPAuthenticationError as e:
-        current_app.logger.error('Error send email!')
-        current_app.logger.error(str(e))
-        abort(500)
+    sendmail_transactional(from_addr, to_addr, msg)
 
 @contact.route("/", methods=["GET", "POST"], endpoint="contact")
 @tryton.transaction()
