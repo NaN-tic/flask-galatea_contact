@@ -6,7 +6,7 @@ from flask import Blueprint, request, render_template, flash, current_app
 from flask_babel import gettext as _, lazy_gettext
 from flask_wtf import FlaskForm as Form
 from wtforms import StringField, TextAreaField, validators
-from galatea.tryton import tryton
+from app_extensions import tryton
 from trytond.sendmail import sendmail_transactional
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
@@ -26,8 +26,8 @@ class ContactForm(Form):
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
-    def validate(self):
-        rv = Form.validate(self)
+    def validate(self, extra_validators=None):
+        rv = Form.validate(self, extra_validators=extra_validators)
         if not rv:
             return False
         return True
